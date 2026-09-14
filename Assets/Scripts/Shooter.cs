@@ -1,73 +1,104 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Shooter : MonoBehaviour
 {
-    [SerializeField] Anchor anchor; //temp
-    GameplayColorObject colorObject; // temp
+    [SerializeField] Transform muzzle;
+    [SerializeField] Transform lazer;
+    [SerializeField] float rotationSmoothing = 10;
+    [SerializeField] float scaleSmoothing = 10;
 
     [HideInInspector] public UnityEvent<GameObject> onTargetHit;
     [HideInInspector] public UnityEvent<GameObject> onTargetShot;
+    [SerializeField] float maxDistance = 999f;
 
-    private IEnumerator Start()
+    readonly RaycastHit[] cameraResults = new RaycastHit[1];
+
+    GameplayColorObject colorObject;
+    Anchor currentAnchor;
+    bool hasTarget;
+    Camera mainCamera;
+
+    void Start()
     {
-        yield return new WaitForSeconds(1);
-        UpdateAnchor();
+        mainCamera = Camera.main;
     }
 
-    private void Update()
+    void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TargetShot(colorObject);
-        }
-        else if (Input.GetKeyDown(KeyCode.P))
-        {
-            TargetHit(colorObject, true);
-        }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
-            TargetHit(colorObject, false);
-        }
-        else if (Input.GetKeyDown(KeyCode.U))
-        {
-            UpdateAnchor();
-        }
+        Aim();
+        Shoot();
     }
 
-    private void UpdateAnchor()
-    {
-        Debug.Log($"Update Anchor: {anchor.name}");
-        colorObject = anchor.GetColorObject(0);
-    }
 
-    private void TargetHit(GameplayColorObject colorObject, bool v)
-    {
-        if (v)
-        {
-            Debug.Log($"Hitting Gameplay Object ! {colorObject.GetData().colorItemSO.colorItemID}");
-        }
-        else
-        {
-            Debug.Log($"NOT Hitting Gameplay Object ! {colorObject.GetData().colorItemSO.colorItemID}");
-        }
-        colorObject.TargetMe(v);
-    }
-
-    private void TargetShot(GameplayColorObject colorObject)
-    {
-        TargetHit(colorObject, false); // Disables the preview.
-
-        Debug.Log($"Destroying Gameplay Object ! {colorObject.GetData().colorItemSO.colorItemID}");
-        colorObject.DestroyMe();
-    }
-
-    private void OnDestroy()
+    void OnDestroy()
     {
         onTargetHit?.RemoveAllListeners();
         onTargetShot?.RemoveAllListeners();
     }
-}
 
+    void Shoot()
+    {
+        if (!hasTarget)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            TargetShot();
+        }
+    }
+
+    void Aim()
+    {
+        var cameraRay = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        lazer.forward = Vector3.Lerp(lazer.forward, cameraRay.direction.normalized, rotationSmoothing);
+
+        if (Physics.RaycastNonAlloc(cameraRay, cameraResults) > 0)
+        {
+            if (hasTarget)
+            {
+                return;
+            }
+
+            colorObject = cameraResults[0].rigidbody.GetComponent<GameplayColorObject>();
+            if (!colorObject)
+            {
+                return;
+            }
+
+            currentAnchor = colorObject.transform.GetComponentInParent<Anchor>();
+            hasTarget = true;
+            TargetHit(true);
+        }
+        else
+        {
+            if (hasTarget)
+            {
+                hasTarget = false;
+                TargetHit(false);
+            }
+        }
+    }
+
+
+    void TargetHit(bool v)
+    {
+        colorObject.TargetMe(v);
+    }
+
+    void TargetShot()
+    {
+        TargetHit(false); // Disables the preview.
+
+        //Debug.Log($"Destroying Gameplay Object ! {colorObject.GetData().colorItemSO.colorItemID}");
+        colorObject.DestroyMe();
+    }
+
+    public Anchor GetTargetedAnchor()
+    {
+        return currentAnchor;
+    }
+}

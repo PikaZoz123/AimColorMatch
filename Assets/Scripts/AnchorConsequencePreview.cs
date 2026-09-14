@@ -23,20 +23,16 @@ public class AnchorConsequencePreview : ConsequencePreview
         }
 
 
-        if (anchor.TryGetNextClusterPoint(out var point))
-        {
-            activePreviewObject = Instantiate(gameplayColorObjectPreviewPrefab, point.Value.GetWorldPosition(transform), Quaternion.identity);
-            activePreviewObject.transform.SetParent(transform);
+        anchor.TryGetPreviewClusterPoint(out var point);
 
-            GameplayColorSO colorData = colorManager.GetOneGameplayColorData(changeColorExistence.colorItemID);
+        activePreviewObject = Instantiate(gameplayColorObjectPreviewPrefab, point.transform.position, Quaternion.identity);
+        activePreviewObject.transform.SetParent(transform);
 
-            activePreviewObject.SetColor(colorData.colorItemSO.colorValue);
-            activePreviewObject.name = $"{changeColorExistence.colorItemID}_Preview";
+        var colorData = colorManager.GetOneGameplayColorData(changeColorExistence.colorItemID);
 
-            activePreviewObject.transform.localScale = 2f * point.Value.Radius * Vector3.one;
+        activePreviewObject.SetColor(colorData.colorItemSO.colorValue);
+        activePreviewObject.name = $"{changeColorExistence.colorItemID}_Preview";
 
-            Debug.Log($"Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {name}");
-
-        }
+        Debug.Log($"Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {name}");
     }
 }

@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AnchorsManager : ConsequenceHandler
 {
+    [SerializeField] Shooter shooter;
     [SerializeField] Anchor[] anchors;
-    int chosenRandomAnchor = -1;
+    Anchor chosenAnchor => shooter.GetTargetedAnchor();
 
     void Start()
     {
@@ -26,28 +28,24 @@ public class AnchorsManager : ConsequenceHandler
     }
 
 
-    void GenerateGameplayColorAtRandomAnchor(ColorItemID colorItemID)
-    {
-        var a = anchors[chosenRandomAnchor];
-
-        a.PlaceNewGeneratedColorObject(colorManager.GetOneGameplayColorData(colorItemID));
-        Debug.Log($"New Gameplay Color Generated: {colorItemID} at Anchor: {a.name}");
-    }
-
-
     protected override void OnConsequencesHappened(ConsequenceItemSO[] consequencesArray)
     {
         foreach (var consequence in consequencesArray)
         {
             if (consequence is ChangeColorExistenceSO { colorExistenceID: ColorExistenceID.GenerateGameplayColor } changeColorExistence) // checks if generate new color existence consequence
             {
-                GenerateGameplayColorAtRandomAnchor(changeColorExistence.colorItemID);
+                var colorItemID = changeColorExistence.colorItemID;
+
+                var newColorObject = chosenAnchor.PlaceNewGeneratedColorObject(colorManager.GetOneGameplayColorData(colorItemID));
+                gameplayObjectsEventHandler.ListenToGameplayObjectEvents(newColorObject);
+
+                Debug.Log($"New Gameplay Color Generated: {colorItemID} at Anchor: {chosenAnchor.name}");
             }
         }
     }
 
-    public void SetRandomAnchorIndex(int previewedAnchorIndex)
+    public int GetActiveAnchorIndex()
     {
-        chosenRandomAnchor = previewedAnchorIndex;
+        return Array.IndexOf(anchors, chosenAnchor);
     }
 }

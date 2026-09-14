@@ -1,143 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Anchor : MonoBehaviour
 {
     [SerializeField] GameplayColorObject gameplayColorPrefab;
-    [SerializeField] AnchorDataSO anchorDataSO;
+    [SerializeField] List<Point> points;
+    readonly List<GameplayColorObject> gameplayColorsObjects = new();
 
-    [SerializeField] List<GameplayColorObject> gameplayColorsObjects = new();
-
-    SphereCluster cluster;
-    int nextClusterPointIndex;
-    private int filledSlotsCount;
-
-    int ClusterSize => anchorDataSO.clusterSize;
-    float ClusterRadius => anchorDataSO.clusterRadius;
-    float MinObjectRadius => anchorDataSO.minObjectRadius;
-    float MaxObjectRadius => anchorDataSO.maxObjectRadius;
-    float SizeBias => anchorDataSO.sizeBias;
-    float DistanceBias => anchorDataSO.distanceBias;
+    Point previewClusterPoint;
 
 
-
-    private void Awake()
+    public bool PlaceNewColorObject(GameplayColorSO gameplayColorSO, out GameplayColorObject newObject) //spawns the colors at the start
     {
-        if (cluster == null)
-        {
-            cluster = new SphereCluster();
-        }
-        cluster.Generate(ClusterSize, ClusterRadius, MinObjectRadius, MaxObjectRadius, SizeBias, DistanceBias);
+        var availableClusterPoint = points[gameplayColorsObjects.Count];
 
-        // init list with empty objects.
-        for (int i = 0; i < ClusterSize; i++)
-        {
-            gameplayColorsObjects.Add(null);
-        }
-
-
-    }
-
-
-
-    public bool PlaceNewColorObject(GameplayColorSO gameplayColorSO, out GameplayColorObject newObject) // point used for preview
-    {
-        newObject = InstantiateObject(gameplayColorSO, filledSlotsCount);
+        newObject = InstantiateObject(gameplayColorSO, availableClusterPoint);
         return newObject != null;
     }
 
-    private void OnGameplayObjectDestroyed(GameplayColorObject gameplayObject)
+    void OnGameplayObjectDestroyed(GameplayColorObject gameplayObject)
     {
-        for (int i = 0; i < gameplayColorsObjects.Count; i++)
+        foreach (var p in points)
         {
-            if (ReferenceEquals(gameplayColorsObjects[i], gameplayObject))
+            if (p.gameplayObject == gameplayObject)
             {
-                gameplayColorsObjects[i] = null;
-                filledSlotsCount--;
+                p.gameplayObject = null;
                 break;
             }
         }
+
+        gameplayColorsObjects.Remove(gameplayObject);
     }
 
-
-    private void OnDrawGizmosSelected()
-    {
-        if (cluster == null)
-        {
-            cluster = new SphereCluster();
-        }
-        if (anchorDataSO == null)
-        {
-            return;
-        }
-
-        if (cluster.Points.Count != ClusterSize)
-        {
-            cluster.Generate(ClusterSize, ClusterRadius, MinObjectRadius, MaxObjectRadius, SizeBias, DistanceBias);
-        }
-
-
-
-        foreach (var point in cluster.Points)
-        {
-            Gizmos.DrawWireSphere(point.GetWorldPosition(transform), point.Radius);
-        }
-
-        Gizmos.DrawWireSphere(transform.position, ClusterRadius);
-    }
 
     public GameplayColorObject GetColorObject(int index)
     {
         return gameplayColorsObjects[index];
     }
 
-    public bool TryGetNextClusterPoint(out SphereCluster.PointData? point)
+    public void TryGetPreviewClusterPoint(out Point point)
     {
         point = null;
-
-        for (int i = 0; i < gameplayColorsObjects.Count; i++)
+        foreach (var p in points)
         {
-            GameplayColorObject o = gameplayColorsObjects[i];
-            if (o == null)
+            if (p.gameplayObject == null)
             {
-                nextClusterPointIndex = i;
-
-                point = cluster.Points[nextClusterPointIndex];
-                return true;
-
+                previewClusterPoint = point = p;
+                break;
             }
         }
-        return false;
     }
 
-    public void PlaceNewGeneratedColorObject(GameplayColorSO gameplayColorSO)
+    public GameplayColorObject PlaceNewGeneratedColorObject(GameplayColorSO gameplayColorSO)
     {
-        InstantiateObject(gameplayColorSO, nextClusterPointIndex);
+        return InstantiateObject(gameplayColorSO, previewClusterPoint);
     }
 
-    private GameplayColorObject InstantiateObject(GameplayColorSO gameplayColorSO, int currentIndex)
+    GameplayColorObject InstantiateObject(GameplayColorSO gameplayColorSO, Point availableClusterPoint)
     {
-        if (filledSlotsCount >= cluster.Points.Count)
-        {
-            Debug.Log($"Anchor: {name} is Full");
-            return null;
-        }
-        var availableClusterPoint = cluster.Points[currentIndex];
-
-        var newObject = Instantiate(gameplayColorPrefab, availableClusterPoint.GetWorldPosition(transform), Quaternion.identity);
+        var newObject = Instantiate(gameplayColorPrefab, availableClusterPoint.transform.position, Quaternion.identity);
         newObject.transform.SetParent(transform);
         newObject.SetData(gameplayColorSO);
 
-        newObject.transform.localScale = 2f * availableClusterPoint.Radius * Vector3.one;
-
-        gameplayColorsObjects[currentIndex] = newObject;
-
-        filledSlotsCount++;
+        gameplayColorsObjects.Add(newObject);
+        availableClusterPoint.gameplayObject = newObject;
 
         newObject.onDestroyed?.AddListener(OnGameplayObjectDestroyed);
         return newObject;
+    }
+
+    [Serializable]
+    public class Point
+    {
+        public Transform transform;
+        public GameplayColorObject gameplayObject;
     }
 }

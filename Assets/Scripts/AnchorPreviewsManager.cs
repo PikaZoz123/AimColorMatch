@@ -3,16 +3,15 @@
 public class AnchorPreviewsManager : PreviewManager
 {
     [SerializeField] AnchorsManager anchorsManager;
-    int anchorToPreviewIndex;
-    ConsequencePreview anchorToPreview => previewsArray[anchorToPreviewIndex];
+    ConsequencePreview anchorToPreview => previewsArray[anchorsManager.GetActiveAnchorIndex()];
+
 
     protected override void Awake()
     {
         base.Awake();
         previewsArray = GetComponentsInChildren<ConsequencePreview>();
     }
-
-
+    
     protected override void OnConsequencesPreviewed(ConsequenceItemSO[] consequencesArray, bool showPreview)
     {
         foreach (var consequence in consequencesArray)
@@ -28,9 +27,6 @@ public class AnchorPreviewsManager : PreviewManager
     {
         if (showPreview)
         {
-            anchorToPreviewIndex = Random.Range(0, previewsArray.Length);
-            anchorsManager.SetRandomAnchorIndex(anchorToPreviewIndex);
-
             anchorToPreview.PreviewConsequence(changeColorExistence, colorManager);
         }
         else
