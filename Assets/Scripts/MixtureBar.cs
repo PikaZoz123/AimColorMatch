@@ -81,4 +81,20 @@ public class MixtureBar : ConsequenceHandler
     {
         return mixtureColorsDict.TryGetValue(colorID, out color);
     }
+
+    public Dictionary<ColorItemID, float> GetMixtureColorsState()
+    {
+        var dataDict = new Dictionary<ColorItemID, float>();
+        foreach (var (id, color) in mixtureColorsDict)
+        {
+            dataDict.Add(id, color.GetCurrentSize());
+        }
+
+        return dataDict;
+    }
+
+    public float GetCapacity()
+    {
+        return capacity;
+    }
 }

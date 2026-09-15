@@ -17,7 +17,7 @@ public class AnchorConsequencePreview : ConsequencePreview
 
     public override void PreviewConsequence(ConsequenceItemSO consequence, ColorManager colorManager)
     {
-        if (consequence is not ChangeColorExistenceSO changeColorExistence || changeColorExistence.colorExistenceID is not ColorExistenceID.GenerateGameplayColor)
+        if (consequence is not ChangeColorExistenceSO { colorExistenceID: ColorExistenceID.GenerateGameplayColor } changeColorExistence)
         {
             return;
         }

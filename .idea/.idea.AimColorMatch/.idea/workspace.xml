@@ -115,13 +115,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/AnchorPreviewsManager.cs</url>
-          <line>16</line>
+          <line>15</line>
           <properties documentPath="A:\_NEON_MYTHIC\AimColorMatch\Assets\Scripts\AnchorPreviewsManager.cs" containingFunctionPresentation="Method 'OnConsequencesPreviewed'">
             <startOffsets>
-              <option value="480" />
+              <option value="479" />
             </startOffsets>
             <endOffsets>
-              <option value="481" />
+              <option value="480" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="15" />

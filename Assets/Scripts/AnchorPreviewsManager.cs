@@ -11,7 +11,7 @@ public class AnchorPreviewsManager : PreviewManager
         base.Awake();
         previewsArray = GetComponentsInChildren<ConsequencePreview>();
     }
-    
+
     protected override void OnConsequencesPreviewed(ConsequenceItemSO[] consequencesArray, bool showPreview)
     {
         foreach (var consequence in consequencesArray)
