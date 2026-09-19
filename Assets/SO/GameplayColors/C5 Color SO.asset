@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorItemSO: {fileID: 11400000, guid: f3aa6ab66e72bc648a096fed06339192, type: 2}
   consequencesArray:
-  - {fileID: 11400000, guid: d7ce0378a27b99f4083dab553eca66c5, type: 2}
-  - {fileID: 11400000, guid: 566f4613cae68ae4b9fa25cd7603307d, type: 2}
+  - {fileID: 11400000, guid: a374db621a1079e45a6dcbe371313a22, type: 2}
+  - {fileID: 11400000, guid: 315840c18c5ff3046bdcc5c81e9ccea3, type: 2}

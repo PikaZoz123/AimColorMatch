@@ -24,21 +24,19 @@ public class MixtureColorConsequencePreview : ConsequencePreview
         if (consequence is ChangeColorExistenceSO { colorExistenceID: ColorExistenceID.RemoveMixtureColor } removeMixtureColor)
         {
             previewSize = 0; // shows the mixture color removed
-            mixtureColorSo = colorManager.GetOneMixtureColorData(removeMixtureColor.colorItemID);
         }
         else if (consequence is AffectMixtureColorSO affectMixtureColor)
         {
             previewSize = mixtureColor.GetCurrentSize() + affectMixtureColor.affectValue;
-            mixtureColorSo = colorManager.GetOneMixtureColorData(affectMixtureColor.colorToAffect);
         }
 
-        SpawnPreviewVisual(mixtureColorSo, previewSize);
+        SpawnPreviewVisual(previewSize);
     }
 
-    void SpawnPreviewVisual(MixtureColorSO mixtureColorSo, float previewSize)
+    void SpawnPreviewVisual(float previewSize)
     {
         mixtureColorPreview = mixtureColor.GetComponent<MixtureColorPreviewVisual>();
-        mixtureColorPreview.SetData(mixtureColorSo, mixtureColor.GetMaxCapacity(), mixtureColor.GetBarWidth());
+        mixtureColorPreview.SetData(mixtureColor.GetCurrentSize(), mixtureColor.GetMaxCapacity(), mixtureColor.GetBarWidth(), mixtureColor.GetColor());
         mixtureColorPreview.SetPreviewSize(previewSize);
         mixtureColorPreview.Animate();
     }

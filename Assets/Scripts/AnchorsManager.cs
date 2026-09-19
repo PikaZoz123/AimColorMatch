@@ -14,17 +14,23 @@ public class AnchorsManager : ConsequenceHandler
 
     void FillAnchors()
     {
-        var gameplayColorDataArray = colorManager.GetGameplayColorsData();
+        var gameplayColorDataList = colorManager.GetColorsInHand();
 
         for (var i = 0; i < anchors.Length; i++)
         {
             var a = anchors[i];
 
-            if (a.PlaceNewColorObject(gameplayColorDataArray[i], out var newColorObject))
+            if (a.PlaceNewColorObject(gameplayColorDataList[i], out var newColorObject))
             {
-                gameplayObjectsEventHandler.ListenToGameplayObjectEvents(newColorObject);
+                HookIntoNewGameplayObject(newColorObject, a);
             }
         }
+    }
+
+    void HookIntoNewGameplayObject(GameplayColorObject newColorObject, Anchor a)
+    {
+        gameplayObjectsEventHandler.ListenToGameplayObjectEvents(newColorObject);
+        newColorObject.onDestroyed.AddListener(x => ReplaceGameplayObject(a, x));
     }
 
 
@@ -37,11 +43,21 @@ public class AnchorsManager : ConsequenceHandler
                 var colorItemID = changeColorExistence.colorItemID;
 
                 var newColorObject = chosenAnchor.PlaceNewGeneratedColorObject(colorManager.GetOneGameplayColorData(colorItemID));
-                gameplayObjectsEventHandler.ListenToGameplayObjectEvents(newColorObject);
+
+                HookIntoNewGameplayObject(newColorObject, chosenAnchor);
 
                 Debug.Log($"New Gameplay Color Generated: {colorItemID} at Anchor: {chosenAnchor.name}");
             }
         }
+    }
+
+
+    void ReplaceGameplayObject(Anchor a, GameplayColorObject destroyedObj)
+    {
+        var id = destroyedObj.GetData().colorItemSO.colorItemID;
+        var newColorObject = a.PlaceNewGeneratedColorObject(colorManager.GetConsumedCardReplacement(id));
+
+        HookIntoNewGameplayObject(newColorObject, a);
     }
 
     public int GetActiveAnchorIndex()

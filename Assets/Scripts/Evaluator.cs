@@ -3,26 +3,27 @@ using UnityEngine;
 
 public class Evaluator : MonoBehaviour
 {
+    [SerializeField] ColorManager colorManager;
     [SerializeField] EvaluatorBalanceProfileSO balanceProfileSo;
 
 
-    public ColorItemID SelectBest(IEnumerable<GameplayColorSO> availableBagCards, Dictionary<ColorItemID, float> mixtureBarState, float mixtureBarCapacity, List<GameplayColorSO> handCards)
+    public ColorItemID SelectBest(IEnumerable<ColorItemID> availableBagCards, Dictionary<ColorItemID, float> mixtureBarState,
+        float mixtureBarCapacity, List<ColorItemID> handCards)
     {
         ColorItemID bestCardID = default;
         var highestScore = float.MinValue;
-        foreach (var card in availableBagCards)
+        foreach (var cardID in availableBagCards)
         {
-            if (handCards.Exists(
-                    x => x.colorItemSO.colorItemID == card.colorItemSO.colorItemID))
+            if (handCards.Contains(cardID))
             {
                 continue;
             }
 
-            var score = Evaluate(card, mixtureBarCapacity, mixtureBarState);
+            var score = Evaluate(colorManager.GetOneGameplayColorData(cardID), mixtureBarCapacity, mixtureBarState);
             if (score > highestScore)
             {
                 highestScore = score;
-                bestCardID = card.colorItemSO.colorItemID;
+                bestCardID = cardID;
             }
         }
 
@@ -50,9 +51,7 @@ public class Evaluator : MonoBehaviour
 
         score += flushCount * balanceProfileSo.flushValue;
 
-        score += Mathf.RoundToInt(
-            totalPressure * balanceProfileSo.totalPressureWeight
-        );
+        score += totalPressure * balanceProfileSo.totalPressureWeight;
 
         if (totalPressure >= mixtureBarCapacity)
         {
@@ -72,6 +71,7 @@ public class Evaluator : MonoBehaviour
                 simulatedState.ContainsKey(affect.colorToAffect))
             {
                 simulatedState[affect.colorToAffect] += affect.affectValue;
+                simulatedState[affect.colorToAffect] = Mathf.Max(0, simulatedState[affect.colorToAffect]);
             }
         }
 

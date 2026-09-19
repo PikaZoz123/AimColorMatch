@@ -9,6 +9,7 @@ public abstract class ConsequenceHandler : MonoBehaviour
     {
         HandleEventSub();
     }
+
     protected virtual void HandleEventSub()
     {
         gameplayObjectsEventHandler.onConsequencesHappened?.AddListener(OnConsequencesHappened);

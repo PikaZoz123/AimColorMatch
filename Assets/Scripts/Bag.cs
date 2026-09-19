@@ -5,8 +5,8 @@ using Random = UnityEngine.Random;
 
 public class Bag : MonoBehaviour
 {
-    [SerializeField] GameplayColorSO[] cardPool;
-    readonly Dictionary<ColorItemID, Stack<GameplayColorSO>> cardsDict = new();
+    [SerializeField] ColorItemID[] cardPoolIDList;
+    readonly Dictionary<ColorItemID, int> cardsDict = new();
 
     void Awake()
     {
@@ -16,29 +16,24 @@ public class Bag : MonoBehaviour
     void ResetCards()
     {
         cardsDict.Clear();
-        foreach (var c in cardPool)
+        foreach (var colorID in cardPoolIDList)
         {
-            if (!cardsDict.TryAdd(c.colorItemSO.colorItemID, null))
+            if (!cardsDict.TryAdd(colorID, 1))
             {
-                cardsDict[c.colorItemSO.colorItemID].Push(c);
-            }
-            else
-            {
-                var stack = new Stack<GameplayColorSO>();
-                stack.Push(c);
-                cardsDict[c.colorItemSO.colorItemID] = stack;
+                cardsDict[colorID]++;
             }
         }
     }
 
 
-    public bool TryDraw(ColorItemID cardID, out GameplayColorSO card)
+    public bool TryDraw(ColorItemID cardID)
     {
-        if (cardsDict.TryGetValue(cardID, out var cardStack))
+        if (cardsDict.TryGetValue(cardID, out var cardCount))
         {
-            if (cardStack.TryPop(out card))
+            if (cardCount > 0)
             {
-                if (cardStack.Count == 0)
+                cardsDict[cardID]--;
+                if (cardsDict[cardID] == 0)
                 {
                     cardsDict.Remove(cardID);
                     if (cardsDict.Count == 0)
@@ -51,14 +46,13 @@ public class Bag : MonoBehaviour
             }
         }
 
-        card = null;
         return false;
     }
 
-    public bool TryDrawRandom(out GameplayColorSO card)
+    public bool TryDrawRandom(out ColorItemID cardID)
     {
-        var cardID = GetRandomIDFromCardsDict();
-        return TryDraw(cardID, out card);
+        cardID = GetRandomIDFromCardsDict();
+        return TryDraw(cardID);
     }
 
     ColorItemID GetRandomIDFromCardsDict()
@@ -67,14 +61,16 @@ public class Bag : MonoBehaviour
         return keys.ElementAt(Random.Range(0, keys.Count));
     }
 
-    public IEnumerable<GameplayColorSO> GetAvailableCards()
+    public IEnumerable<ColorItemID> GetAvailableCards()
     {
-        foreach (var stack in cardsDict.Values)
+        foreach (var (id, count) in cardsDict)
         {
-            foreach (var card in stack)
+            if (count == 0)
             {
-                yield return card;
+                continue;
             }
+
+            yield return id;
         }
     }
 }

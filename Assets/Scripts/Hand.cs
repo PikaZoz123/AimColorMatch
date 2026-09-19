@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Hand : MonoBehaviour
 {
@@ -9,9 +10,9 @@ public class Hand : MonoBehaviour
     [SerializeField] Evaluator evaluator;
     [SerializeField] HandSettingsSO handSettingsSo;
 
-    readonly List<GameplayColorSO> cards = new();
+    readonly List<ColorItemID> cards = new();
 
-    void Create()
+    public List<ColorItemID> Create()
     {
         cards.Clear();
 
@@ -20,38 +21,42 @@ public class Hand : MonoBehaviour
         {
             PullNewCard(cards.Count < handSettingsSo.initialStateDrivenCount); //ShouldInitiallySelectBasedOnState
         }
+
+        return cards;
     }
 
-    public void Consume(GameplayColorSO consumedCard)
+    public ColorItemID Replace(ColorItemID consumedCardID)
     {
-        cards.Remove(consumedCard);
+        cards.Remove(consumedCardID);
 
-        PullNewCard(Random.Range(0, 1f) <= handSettingsSo.replacementStateDrivenChance);
+        return PullNewCard(Random.Range(0, 1f) <= handSettingsSo.replacementStateDrivenChance);
     }
 
-    void PullNewCard(bool evaluatorCondition)
+    ColorItemID PullNewCard(bool evaluatorCondition)
     {
-        GameplayColorSO card = null;
+        ColorItemID cardID = default;
         if (evaluatorCondition)
         {
-            var cardID = evaluator.SelectBest(
+            cardID = evaluator.SelectBest(
                 bag.GetAvailableCards(),
                 mixtureBar.GetMixtureColorsState(),
                 mixtureBar.GetCapacity(),
                 cards
             );
 
-            if (bag.TryDraw(cardID, out card))
+            if (bag.TryDraw(cardID))
             {
-                cards.Add(card);
+                cards.Add(cardID);
             }
         }
         else
         {
-            if (bag.TryDrawRandom(out card))
+            if (bag.TryDrawRandom(out cardID))
             {
-                cards.Add(card);
+                cards.Add(cardID);
             }
         }
+
+        return cardID;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class MixtureColor : MonoBehaviour
 {
     [SerializeField] protected RectTransform rectTransform;
     [SerializeField] protected Image colorImg;
+    [SerializeField] protected TMP_Text valText;
 
     [Header("Animation")] [SerializeField] protected float sizeChangeDuration;
 
@@ -18,30 +20,30 @@ public class MixtureColor : MonoBehaviour
     public void SetData(MixtureColorSO mixtureColorSO, float maxCapacity, float barWidth)
     {
         this.mixtureColorSO = mixtureColorSO;
-        currentSize = mixtureColorSO.size;
         colorImg.color = mixtureColorSO.colorItemSO.colorValue;
 
         this.maxCapacity = maxCapacity;
         this.barWidth = barWidth;
 
-
-        SetRectWidth(currentSize / maxCapacity * barWidth);
+        SetCurrentSize(mixtureColorSO.size);
     }
 
     public void AddToCurrentSize(float affectValue)
     {
         currentSize += affectValue;
-        SetRectWidth(currentSize / maxCapacity * barWidth);
+        currentSize = Mathf.Max(0, currentSize);
+        valText.text = $"{currentSize}";
 
-        Debug.Log($"Size Affected: {mixtureColorSO.colorItemSO.colorItemID}, Current Size: {currentSize}");
+
+        SetRectWidth(currentSize / maxCapacity * barWidth);
     }
 
     public void SetCurrentSize(float v)
     {
-        currentSize = v;
-        SetRectWidth(currentSize / maxCapacity * barWidth);
+        currentSize = Mathf.Max(0, v);
+        valText.text = $"{currentSize}";
 
-        Debug.Log($"Size Set: {mixtureColorSO.colorItemSO.colorItemID}, Current Size: {currentSize}");
+        SetRectWidth(currentSize / maxCapacity * barWidth);
     }
 
     void SetRectWidth(float width)
@@ -71,5 +73,10 @@ public class MixtureColor : MonoBehaviour
     public void ResetCurrentSize()
     {
         SetCurrentSize(currentSize);
+    }
+
+    public Color GetColor()
+    {
+        return mixtureColorSO.colorItemSO.colorValue;
     }
 }

@@ -19,12 +19,24 @@ public class MixtureColorPreviewVisual : MixtureColor
         var oldSizeDelta = rectTransform.sizeDelta;
         oldSizeDelta.x = currentSize / maxCapacity * barWidth;
 
-        sizeTween = rectTransform.DOSizeDelta(newSizeDelta, sizeChangeDuration).From(oldSizeDelta).SetLoops(-1, LoopType.Restart).SetEase(sizeChangeEase);
+        sizeTween = rectTransform.DOSizeDelta(newSizeDelta, sizeChangeDuration).From(oldSizeDelta).SetEase(sizeChangeEase);
+
+        valText.text = $"{currentSize}\n|\n{previewSize}";
+    }
+
+    public void SetData(float currentSize, float maxCapacity, float barWidth, Color color)
+    {
+        colorImg.color = color;
+
+        this.maxCapacity = maxCapacity;
+        this.barWidth = barWidth;
+
+        SetCurrentSize(currentSize);
     }
 
     public void SetPreviewSize(float previewSize)
     {
-        this.previewSize = previewSize;
+        this.previewSize = Mathf.Max(previewSize, 0);
     }
 
     public void Deactivate()

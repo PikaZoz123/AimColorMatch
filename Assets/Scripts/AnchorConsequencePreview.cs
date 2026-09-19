@@ -19,20 +19,19 @@ public class AnchorConsequencePreview : ConsequencePreview
     {
         if (consequence is not ChangeColorExistenceSO { colorExistenceID: ColorExistenceID.GenerateGameplayColor } changeColorExistence)
         {
-            return;
         }
 
 
-        anchor.TryGetPreviewClusterPoint(out var point);
-
-        activePreviewObject = Instantiate(gameplayColorObjectPreviewPrefab, point.transform.position, Quaternion.identity);
-        activePreviewObject.transform.SetParent(transform);
-
-        var colorData = colorManager.GetOneGameplayColorData(changeColorExistence.colorItemID);
-
-        activePreviewObject.SetColor(colorData.colorItemSO.colorValue);
-        activePreviewObject.name = $"{changeColorExistence.colorItemID}_Preview";
-
-        Debug.Log($"Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {name}");
+        // anchor.TryGetPreviewClusterPoint(out var point);
+        //
+        // activePreviewObject = Instantiate(gameplayColorObjectPreviewPrefab, point.transform.position, Quaternion.identity);
+        // activePreviewObject.transform.SetParent(transform);
+        //
+        // var colorData = colorManager.GetOneGameplayColorData(changeColorExistence.colorItemID);
+        //
+        // activePreviewObject.SetColor(colorData.colorItemSO.colorValue);
+        // activePreviewObject.name = $"{changeColorExistence.colorItemID}_Preview";
+        //
+        // Debug.Log($"Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {name}");
     }
 }

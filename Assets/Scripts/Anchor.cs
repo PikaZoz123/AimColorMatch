@@ -8,7 +8,7 @@ public class Anchor : MonoBehaviour
     [SerializeField] List<Point> points;
     readonly List<GameplayColorObject> gameplayColorsObjects = new();
 
-    Point previewClusterPoint;
+    // Point previewClusterPoint;
 
 
     public bool PlaceNewColorObject(GameplayColorSO gameplayColorSO, out GameplayColorObject newObject) //spawns the colors at the start
@@ -46,7 +46,7 @@ public class Anchor : MonoBehaviour
         {
             if (p.gameplayObject == null)
             {
-                previewClusterPoint = point = p;
+                point = p;
                 break;
             }
         }
@@ -54,7 +54,8 @@ public class Anchor : MonoBehaviour
 
     public GameplayColorObject PlaceNewGeneratedColorObject(GameplayColorSO gameplayColorSO)
     {
-        return InstantiateObject(gameplayColorSO, previewClusterPoint);
+        TryGetPreviewClusterPoint(out var point);
+        return InstantiateObject(gameplayColorSO, point);
     }
 
     GameplayColorObject InstantiateObject(GameplayColorSO gameplayColorSO, Point availableClusterPoint)
@@ -63,12 +64,15 @@ public class Anchor : MonoBehaviour
         newObject.transform.SetParent(transform);
         newObject.SetData(gameplayColorSO);
 
+        newObject.name = $"{gameplayColorSO.colorItemSO.colorItemID}";
+
         gameplayColorsObjects.Add(newObject);
         availableClusterPoint.gameplayObject = newObject;
 
         newObject.onDestroyed?.AddListener(OnGameplayObjectDestroyed);
         return newObject;
     }
+
 
     [Serializable]
     public class Point
