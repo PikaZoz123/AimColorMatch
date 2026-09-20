@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9cef8143384b169bf2dbcf112469a6, type: 3}
   m_Name: Evaluator Balance Profile SO
   m_EditorClassIdentifier: Assembly-CSharp::EvaluatorBalanceProfileSO
-  flushValue: 100
-  totalPressureWeight: -10
-  largestMixtureWeight: -1000
+  flushValue: 20
+  totalPressureWeight: 1
+  largestMixtureWeight: 0
   smallestMixtureWeight: 0
-  deathPenalty: 0
+  deathPenalty: 100
   futureFlushValue: 0
   futureReductionValue: 0
   futureOptionsValue: 0
   randomness: 0
+  nearAlignmentValue: 6

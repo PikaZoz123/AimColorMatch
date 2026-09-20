@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0ddcc56a727e9438cf052ed90860ff, type: 3}
   m_Name: C6 Color SO
   m_EditorClassIdentifier: 
-  colorItemSO: {fileID: 11400000, guid: ff7448927ad7d6f4b856f302404571f3, type: 2}
+  colorItemSO: {fileID: 11400000, guid: 659f7826c676f084eaf33a41b8ceccc7, type: 2}
   consequencesArray:
-  - {fileID: 11400000, guid: 315840c18c5ff3046bdcc5c81e9ccea3, type: 2}
-  - {fileID: 11400000, guid: 216504ad978c3754d9e8766ec9d4bff4, type: 2}
+  - {fileID: 11400000, guid: 4cf998bfbe202bd4d925c2c708bc2d3b, type: 2}

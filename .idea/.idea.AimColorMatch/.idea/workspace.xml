@@ -19,8 +19,14 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6a469c5cf96a43eab23a293167261e20212400/8c/8552a408/UnityEvent`2.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6a469c5cf96a43eab23a293167261e20212400/df/f1bfad81/InvokableCall`2.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6faa6124236442759eb396cfbfdad50810fc00/3f/3a201145/Enumerable.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -74,10 +80,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="15164">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="19432">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="15164" />
+      <option name="pid" value="19432" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -153,6 +159,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/MixtureColorConsequencePreview.cs</url>
+          <line>36</line>
+          <properties documentPath="A:\_NEON_MYTHIC\AimColorMatch\Assets\Scripts\MixtureColorConsequencePreview.cs" containingFunctionPresentation="Method 'SpawnPreviewVisual'">
+            <startOffsets>
+              <option value="1198" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1199" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/MixtureBarPreviewsManager.cs</url>
+          <line>96</line>
+          <properties documentPath="A:\_NEON_MYTHIC\AimColorMatch\Assets\Scripts\MixtureBarPreviewsManager.cs" containingFunctionPresentation="Method 'TryGetPreview'">
+            <startOffsets>
+              <option value="2976" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3041" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

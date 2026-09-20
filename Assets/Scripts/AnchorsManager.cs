@@ -54,8 +54,8 @@ public class AnchorsManager : ConsequenceHandler
 
     void ReplaceGameplayObject(Anchor a, GameplayColorObject destroyedObj)
     {
-        var id = destroyedObj.GetData().colorItemSO.colorItemID;
-        var newColorObject = a.PlaceNewGeneratedColorObject(colorManager.GetConsumedCardReplacement(id));
+        var consumedCard = destroyedObj.GetData();
+        var newColorObject = a.PlaceNewGeneratedColorObject(colorManager.GetConsumedCardReplacement(consumedCard));
 
         HookIntoNewGameplayObject(newColorObject, a);
     }

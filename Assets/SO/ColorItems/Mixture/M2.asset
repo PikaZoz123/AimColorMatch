@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: M2
   m_EditorClassIdentifier: 
   colorItemID: 1
-  colorValue: {r: 0.5345911, g: 0.23951618, b: 0.23031121, a: 1}
+  colorValue: {r: 0, g: 0.7077484, b: 1, a: 1}

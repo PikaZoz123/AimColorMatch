@@ -16,4 +16,5 @@ public class EvaluatorBalanceProfileSO : ScriptableObject
     public float futureOptionsValue;
 
     public float randomness;
+    public float nearAlignmentValue;
 }

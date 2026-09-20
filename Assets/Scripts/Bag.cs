@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Bag : MonoBehaviour
 {
-    [SerializeField] ColorItemID[] cardPoolIDList;
-    readonly Dictionary<ColorItemID, int> cardsDict = new();
+    [SerializeField] GameplayColorSO[] cardPool;
+
+    readonly List<GameplayColorSO> cards = new();
 
     void Awake()
     {
@@ -15,62 +15,59 @@ public class Bag : MonoBehaviour
 
     void ResetCards()
     {
-        cardsDict.Clear();
-        foreach (var colorID in cardPoolIDList)
-        {
-            if (!cardsDict.TryAdd(colorID, 1))
-            {
-                cardsDict[colorID]++;
-            }
-        }
+        cards.Clear();
+        cards.AddRange(cardPool);
     }
 
-
-    public bool TryDraw(ColorItemID cardID)
+    public bool TryDraw(GameplayColorSO requestedCard, out GameplayColorSO card)
     {
-        if (cardsDict.TryGetValue(cardID, out var cardCount))
-        {
-            if (cardCount > 0)
-            {
-                cardsDict[cardID]--;
-                if (cardsDict[cardID] == 0)
-                {
-                    cardsDict.Remove(cardID);
-                    if (cardsDict.Count == 0)
-                    {
-                        ResetCards();
-                    }
-                }
+        var index = cards.IndexOf(requestedCard);
 
-                return true;
+        if (index >= 0)
+        {
+            card = cards[index];
+            cards.RemoveAt(index);
+
+            if (cards.Count == 0)
+            {
+                ResetCards();
             }
+
+            return true;
         }
 
+        card = null;
         return false;
     }
 
-    public bool TryDrawRandom(out ColorItemID cardID)
+    public bool TryDrawRandom(out GameplayColorSO card)
     {
-        cardID = GetRandomIDFromCardsDict();
-        return TryDraw(cardID);
-    }
-
-    ColorItemID GetRandomIDFromCardsDict()
-    {
-        var keys = cardsDict.Keys;
-        return keys.ElementAt(Random.Range(0, keys.Count));
-    }
-
-    public IEnumerable<ColorItemID> GetAvailableCards()
-    {
-        foreach (var (id, count) in cardsDict)
+        if (cards.Count == 0)
         {
-            if (count == 0)
-            {
-                continue;
-            }
-
-            yield return id;
+            ResetCards();
         }
+
+        if (cards.Count == 0)
+        {
+            card = null;
+            return false;
+        }
+
+        var index = Random.Range(0, cards.Count);
+
+        card = cards[index];
+        cards.RemoveAt(index);
+
+        if (cards.Count == 0)
+        {
+            ResetCards();
+        }
+
+        return true;
+    }
+
+    public IEnumerable<GameplayColorSO> GetAvailableCards()
+    {
+        return cards;
     }
 }

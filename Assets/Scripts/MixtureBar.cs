@@ -11,10 +11,11 @@ public class MixtureBar : ConsequenceHandler
     [SerializeField] float capacity;
 
     [HideInInspector] public UnityEvent<Dictionary<ColorItemID, MixtureColor>> onColorsInitialized;
+    readonly List<ColorItemID> colorsOrderList = new();
     readonly Dictionary<ColorItemID, MixtureColor> mixtureColorsDict = new();
 
 
-    void Start()
+    protected void Start()
     {
         InitializeColors(colorManager.GetMixtureColorsData());
     }
@@ -24,14 +25,17 @@ public class MixtureBar : ConsequenceHandler
         onColorsInitialized?.RemoveAllListeners();
     }
 
-    void InitializeColors(MixtureColorSO[] mixtureColorsData)
+    void InitializeColors(List<MixtureColorSO> mixtureColorsData)
     {
         foreach (var data in mixtureColorsData)
         {
             var copy = Instantiate(mixtureColorPrefab, contentParent);
             copy.SetData(data, capacity, rectTransform.rect.width);
 
-            mixtureColorsDict.Add(data.colorItemSO.colorItemID, copy);
+            var id = data.colorItemSO.colorItemID;
+            mixtureColorsDict.Add(id, copy);
+
+            colorsOrderList.Add(id);
         }
 
         onColorsInitialized?.Invoke(mixtureColorsDict);
@@ -96,5 +100,10 @@ public class MixtureBar : ConsequenceHandler
     public float GetCapacity()
     {
         return capacity;
+    }
+
+    public List<ColorItemID> GetTowerOrder()
+    {
+        return colorsOrderList;
     }
 }

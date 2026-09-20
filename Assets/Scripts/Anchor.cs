@@ -7,6 +7,7 @@ public class Anchor : MonoBehaviour
     [SerializeField] GameplayColorObject gameplayColorPrefab;
     [SerializeField] List<Point> points;
     readonly List<GameplayColorObject> gameplayColorsObjects = new();
+    Point nextSpawnPoint;
 
     // Point previewClusterPoint;
 
@@ -26,7 +27,10 @@ public class Anchor : MonoBehaviour
             if (p.gameplayObject == gameplayObject)
             {
                 p.gameplayObject = null;
-                break;
+            }
+            else if (nextSpawnPoint == null)
+            {
+                nextSpawnPoint = p;
             }
         }
 
@@ -54,8 +58,10 @@ public class Anchor : MonoBehaviour
 
     public GameplayColorObject PlaceNewGeneratedColorObject(GameplayColorSO gameplayColorSO)
     {
-        TryGetPreviewClusterPoint(out var point);
-        return InstantiateObject(gameplayColorSO, point);
+        var newGeneratedObject = InstantiateObject(gameplayColorSO, nextSpawnPoint);
+        nextSpawnPoint = null;
+
+        return newGeneratedObject;
     }
 
     GameplayColorObject InstantiateObject(GameplayColorSO gameplayColorSO, Point availableClusterPoint)

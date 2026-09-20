@@ -7,15 +7,23 @@ public class ColorManager : MonoBehaviour // divides game colors to mixture and 
     [SerializeField] Hand hand;
     [SerializeField] int totalColorCount = 6;
     [SerializeField] int mixtureColorsCount = 3;
+
     [SerializeField] int gameplayColorsCount = 3;
-    [SerializeField] List<ColorItemID> mixtureColorsList = new();
+    [SerializeField] List<ColorItemID> mixtureColorIds;
+
     [SerializeField] bool initializeRandomColors;
     readonly List<GameplayColorSO> colorsInHand = new();
 
 
-    public MixtureColorSO[] GetMixtureColorsData()
+    public List<MixtureColorSO> GetMixtureColorsData()
     {
-        return colorsTableSO.GetMixtureColors(mixtureColorsList);
+        var colorsInBar = new List<MixtureColorSO>();
+        foreach (var id in mixtureColorIds)
+        {
+            colorsInBar.Add(GetOneMixtureColorData(id));
+        }
+
+        return colorsInBar;
     }
 
     public GameplayColorSO GetOneGameplayColorData(ColorItemID colorItemID)
@@ -31,18 +39,18 @@ public class ColorManager : MonoBehaviour // divides game colors to mixture and 
     public List<GameplayColorSO> GetColorsInHand()
     {
         colorsInHand.Clear();
-        var idsInHand = hand.Create();
+        var handCards = hand.Create();
 
-        foreach (var id in idsInHand)
+        foreach (var card in handCards)
         {
-            colorsInHand.Add(GetOneGameplayColorData(id));
+            colorsInHand.Add(card);
         }
 
         return colorsInHand;
     }
 
-    public GameplayColorSO GetConsumedCardReplacement(ColorItemID id)
+    public GameplayColorSO GetConsumedCardReplacement(GameplayColorSO consumedCard)
     {
-        return GetOneGameplayColorData(hand.Replace(id));
+        return hand.Replace(consumedCard);
     }
 }

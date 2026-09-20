@@ -14,10 +14,10 @@ public class MixtureColorPreviewVisual : MixtureColor
         shakeFeedback.Play();
 
         var newSizeDelta = rectTransform.sizeDelta;
-        newSizeDelta.x = previewSize / maxCapacity * barWidth;
+        newSizeDelta.y = previewSize / maxCapacity * barWidth;
 
         var oldSizeDelta = rectTransform.sizeDelta;
-        oldSizeDelta.x = currentSize / maxCapacity * barWidth;
+        oldSizeDelta.y = currentSize / maxCapacity * barWidth;
 
         sizeTween = rectTransform.DOSizeDelta(newSizeDelta, sizeChangeDuration).From(oldSizeDelta).SetEase(sizeChangeEase);
 

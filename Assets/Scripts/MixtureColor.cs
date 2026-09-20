@@ -46,10 +46,10 @@ public class MixtureColor : MonoBehaviour
         SetRectWidth(currentSize / maxCapacity * barWidth);
     }
 
-    void SetRectWidth(float width)
+    void SetRectWidth(float height)
     {
         var newDelta = rectTransform.sizeDelta;
-        newDelta.x = width;
+        newDelta.y = height;
 
         rectTransform.DOSizeDelta(newDelta, sizeChangeDuration);
     }

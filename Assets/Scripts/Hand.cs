@@ -10,53 +10,61 @@ public class Hand : MonoBehaviour
     [SerializeField] Evaluator evaluator;
     [SerializeField] HandSettingsSO handSettingsSo;
 
-    readonly List<ColorItemID> cards = new();
+    readonly List<GameplayColorSO> cards = new();
 
-    public List<ColorItemID> Create()
+    public List<GameplayColorSO> Create()
     {
         cards.Clear();
 
         var handSize = handSettingsSo.handSize;
+
         while (cards.Count < handSize)
         {
-            PullNewCard(cards.Count < handSettingsSo.initialStateDrivenCount); //ShouldInitiallySelectBasedOnState
+            PullNewCard(
+                cards.Count < handSettingsSo.initialStateDrivenCount
+            );
         }
 
         return cards;
     }
 
-    public ColorItemID Replace(ColorItemID consumedCardID)
+    public GameplayColorSO Replace(GameplayColorSO consumedCard)
     {
-        cards.Remove(consumedCardID);
+        cards.Remove(consumedCard);
 
-        return PullNewCard(Random.Range(0, 1f) <= handSettingsSo.replacementStateDrivenChance);
+        return PullNewCard(Random.Range(0f, 1f) <= handSettingsSo.replacementStateDrivenChance);
     }
 
-    ColorItemID PullNewCard(bool evaluatorCondition)
+    GameplayColorSO PullNewCard(bool evaluatorCondition)
     {
-        ColorItemID cardID = default;
+        GameplayColorSO selectedCard = null;
+
         if (evaluatorCondition)
         {
-            cardID = evaluator.SelectBest(
+            selectedCard = evaluator.SelectBest(
                 bag.GetAvailableCards(),
                 mixtureBar.GetMixtureColorsState(),
                 mixtureBar.GetCapacity(),
+                mixtureBar.GetTowerOrder(),
                 cards
             );
 
-            if (bag.TryDraw(cardID))
+            if (selectedCard != null &&
+                bag.TryDraw(selectedCard, out var card))
             {
-                cards.Add(cardID);
+                cards.Add(card);
+                return card;
             }
         }
         else
         {
-            if (bag.TryDrawRandom(out cardID))
+            if (bag.TryDrawRandom(out var card))
             {
-                cards.Add(cardID);
+                cards.Add(card);
+                return card;
             }
         }
 
-        return cardID;
+        return null;
     }
 }
