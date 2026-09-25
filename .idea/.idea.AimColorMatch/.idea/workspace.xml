@@ -111,6 +111,25 @@
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/MixtureBar.cs</url>
+          <line>143</line>
+          <properties documentPath="A:\_NEON_MYTHIC\AimColorMatch\Assets\Scripts\MixtureBar.cs" containingFunctionPresentation="Method 'SetColorsSize'">
+            <startOffsets>
+              <option value="3936" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3937" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />

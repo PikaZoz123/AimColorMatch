@@ -17,19 +17,49 @@ public class Reconfigurator : MonoBehaviour
         Debug.Log("Reconfiguring with new values - TBD");
 
         var moveCount = DecideMoveCount();
-        handCards = hand.GetCards();
+        Debug.Log($"Move count decided: {moveCount}");
 
-        var usableToolsComibnations = GetUsableToolsCombo(moveCount);
-        Debug.Log("Got Tools Combinations !");
+        var sizes = new Dictionary<int, List<float>>();
+        if (moveCount > 0)
+        {
+            handCards = hand.GetCards();
 
-        var processedWindowsList = GetComboProcessedWindowsList(colorsState, usableToolsComibnations);
+            var usableToolsComibnations = GetUsableToolsCombo(moveCount);
+            Debug.Log($"Got Tools Combinations: {usableToolsComibnations.Count}");
 
-        var sizes = GetFlushTowerRefillValues(flushedTowersList, maxCapacity, processedWindowsList);
+            var processedWindowsList = GetComboProcessedWindowsList(colorsState, usableToolsComibnations);
+
+            sizes = GetFlushTowerRefillValues(flushedTowersList, maxCapacity, processedWindowsList);
+        }
+        else
+        {
+            sizes = RandomRefill(flushedTowersList, maxCapacity);
+        }
 
         return sizes;
     }
 
-    List<List<FlushCandidate>> GetComboProcessedWindowsList(Dictionary<ColorItemID, float> colorsState, List<List<GameplayColorSO>> usableToolsComibnations)
+    Dictionary<int, List<float>> RandomRefill(List<int> flushedTowersList, float maxCapacity)
+    {
+        var sizes = new Dictionary<int, List<float>>();
+
+        foreach (var flushedTower in flushedTowersList)
+        {
+            var randomSize = Random.Range(maxCapacity * balanceProfileSo.randomRefillMinBias, maxCapacity * balanceProfileSo.randomRefillMaxBias);
+            randomSize = Mathf.RoundToInt(randomSize);
+            sizes.TryAdd(flushedTower, new List<float>
+            {
+                randomSize
+            });
+            Debug.Log($"New Size for tower index: {flushedTower} - Random {randomSize}");
+        }
+
+        return sizes;
+    }
+
+
+    List<List<FlushCandidate>> GetComboProcessedWindowsList(Dictionary<ColorItemID, float> colorsState,
+        List<List<GameplayColorSO>> usableToolsComibnations)
     {
         var list = new List<List<FlushCandidate>>();
 
@@ -52,7 +82,7 @@ public class Reconfigurator : MonoBehaviour
     }
 
     Dictionary<int, List<float>> GetFlushTowerRefillValues(List<int> flushedTowersList,
-        float maxCapacity, List<List<FlushCandidate>> candidatesList)
+        float maxCapacity, List<List<FlushCandidate>> comboCandidatesList)
     {
         var sizes = new Dictionary<int, List<float>>();
 
@@ -60,7 +90,7 @@ public class Reconfigurator : MonoBehaviour
         {
             sizes.TryAdd(flushedTower, null);
 
-            foreach (var windows in candidatesList)
+            foreach (var windows in comboCandidatesList)
             {
                 foreach (var window in windows)
                 {
@@ -268,9 +298,6 @@ public class Reconfigurator : MonoBehaviour
 
         var combo = new List<GameplayColorSO>();
 
-        // for (var i = 0; i < handCards.Count; i++)
-        // {
-        // }
         FillComboList(moveCount, 0, ref combo, comboList);
 
 
@@ -333,30 +360,29 @@ public class Reconfigurator : MonoBehaviour
 
     int DecideMoveCount()
     {
-        // var rand = Random.Range(0, 100f);
-        // if (balanceProfileSo.oneMoveOpportunityChance < rand)
-        // {
-        //     return 1;
-        // }
-        //
-        // if (balanceProfileSo.oneMoveOpportunityChance + balanceProfileSo.twoMoveOpportunityChance < rand)
-        // {
-        //     return 2;
-        // }
-        //
-        // if (balanceProfileSo.oneMoveOpportunityChance +
-        //     balanceProfileSo.twoMoveOpportunityChance +
-        //     balanceProfileSo.threeMoveOpportunityChance < rand)
-        // {
-        //     return 3;
-        // }
+        var rand = Random.Range(0, 100f);
+        if (rand < balanceProfileSo.oneMoveOpportunityChance)
+        {
+            return 1;
+        }
 
-        // return 0;
-        return 2; // for now
+        if (rand < balanceProfileSo.oneMoveOpportunityChance + balanceProfileSo.twoMoveOpportunityChance)
+        {
+            return 2;
+        }
+
+        if (rand < balanceProfileSo.oneMoveOpportunityChance +
+            balanceProfileSo.twoMoveOpportunityChance +
+            balanceProfileSo.threeMoveOpportunityChance)
+        {
+            return 3;
+        }
+
+        return 0;
     }
 
 
-    internal struct FlushCandidate
+    struct FlushCandidate
     {
         public readonly int startIndex;
         public readonly int endIndex;

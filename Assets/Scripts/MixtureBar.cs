@@ -151,7 +151,7 @@ public class MixtureBar : ConsequenceHandler
 
             color.SetCurrentSize(newSize);
 
-            Debug.Log($"Color {color.name} resized: {sizesList}");
+            Debug.Log($"Color {color.name} resized: {newSize}");
         }
     }
 }
