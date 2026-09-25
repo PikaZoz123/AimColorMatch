@@ -140,18 +140,18 @@ public class MixtureBar : ConsequenceHandler
     }
 
 
-    public void SetColorsSize(List<int> colorList, float[] newSizes)
+    public void SetColorsSize(List<int> colorList, Dictionary<int, List<float>> newSizes)
     {
-        for (var i = 0; i < colorList.Count; i++)
+        foreach (var tower in colorList)
         {
-            var towerIndex = colorList[i];
+            var color = orderedColorsList[tower];
 
-            var color = orderedColorsList[towerIndex];
+            var sizesList = newSizes[tower];
+            var newSize = sizesList[Random.Range(0, sizesList.Count)];
 
-            var newSize = newSizes[i];
             color.SetCurrentSize(newSize);
 
-            Debug.Log($"Color {color.name} resized: {newSize}");
+            Debug.Log($"Color {color.name} resized: {sizesList}");
         }
     }
 }
