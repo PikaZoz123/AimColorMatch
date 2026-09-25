@@ -11,7 +11,7 @@ public class MixtureColorConsequencePreview : ConsequencePreview
     {
         if (mixtureColorPreview != null)
         {
-            Debug.Log($"Preview Object: {mixtureColorPreview.name} destroyed!");
+            //Debug.Log($"Preview Object: {mixtureColorPreview.name} destroyed!");
             mixtureColorPreview.Deactivate();
             mixtureColor.ResetCurrentSize();
         }

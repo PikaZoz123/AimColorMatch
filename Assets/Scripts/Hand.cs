@@ -45,7 +45,6 @@ public class Hand : MonoBehaviour
                 bag.GetAvailableCards(),
                 mixtureBar.GetMixtureColorsState(),
                 mixtureBar.GetCapacity(),
-                mixtureBar.GetTowerOrder(),
                 cards
             );
 
@@ -66,5 +65,10 @@ public class Hand : MonoBehaviour
         }
 
         return null;
+    }
+
+    public List<GameplayColorSO> GetCards()
+    {
+        return new List<GameplayColorSO>(cards);
     }
 }

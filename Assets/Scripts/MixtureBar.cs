@@ -11,8 +11,10 @@ public class MixtureBar : ConsequenceHandler
     [SerializeField] float capacity;
 
     [HideInInspector] public UnityEvent<Dictionary<ColorItemID, MixtureColor>> onColorsInitialized;
-    readonly List<ColorItemID> colorsOrderList = new();
+    [SerializeField] UnityEvent onColorsStateChanged;
+
     readonly Dictionary<ColorItemID, MixtureColor> mixtureColorsDict = new();
+    readonly List<MixtureColor> orderedColorsList = new();
 
 
     protected void Start()
@@ -33,10 +35,11 @@ public class MixtureBar : ConsequenceHandler
             copy.SetData(data, capacity, rectTransform.rect.width);
 
             var id = data.colorItemSO.colorItemID;
-            mixtureColorsDict.Add(id, copy);
 
-            colorsOrderList.Add(id);
+            mixtureColorsDict.Add(id, copy);
+            orderedColorsList.Add(copy);
         }
+
 
         onColorsInitialized?.Invoke(mixtureColorsDict);
     }
@@ -54,6 +57,8 @@ public class MixtureBar : ConsequenceHandler
                 AffectMixtureColor(affectColor.colorToAffect, affectColor.affectValue);
             }
         }
+
+        onColorsStateChanged?.Invoke();
     }
 
 
@@ -89,9 +94,17 @@ public class MixtureBar : ConsequenceHandler
     public Dictionary<ColorItemID, float> GetMixtureColorsState()
     {
         var dataDict = new Dictionary<ColorItemID, float>();
-        foreach (var (id, color) in mixtureColorsDict)
+
+        foreach (var orderedColor in orderedColorsList)
         {
-            dataDict.Add(id, color.GetCurrentSize());
+            foreach (var (id, color) in mixtureColorsDict)
+            {
+                if (color == orderedColor)
+                {
+                    dataDict.Add(id, color.GetCurrentSize());
+                    break;
+                }
+            }
         }
 
         return dataDict;
@@ -102,8 +115,43 @@ public class MixtureBar : ConsequenceHandler
         return capacity;
     }
 
-    public List<ColorItemID> GetTowerOrder()
+    public void NullifyColors(List<int> colorList)
     {
-        return colorsOrderList;
+        foreach (var t in colorList)
+        {
+            var color = orderedColorsList[t];
+            color.SetCurrentSize(0);
+
+            Debug.Log($"Color {color.name} nullified");
+        }
+    }
+
+    public List<MixtureColor> GetIndexedColorsList()
+    {
+        return orderedColorsList;
+    }
+
+    public IEnumerable<MixtureColor> GetColorsByIndexList(List<int> flushableTowersList)
+    {
+        foreach (var t in flushableTowersList)
+        {
+            yield return orderedColorsList[t];
+        }
+    }
+
+
+    public void SetColorsSize(List<int> colorList, float[] newSizes)
+    {
+        for (var i = 0; i < colorList.Count; i++)
+        {
+            var towerIndex = colorList[i];
+
+            var color = orderedColorsList[towerIndex];
+
+            var newSize = newSizes[i];
+            color.SetCurrentSize(newSize);
+
+            Debug.Log($"Color {color.name} resized: {newSize}");
+        }
     }
 }

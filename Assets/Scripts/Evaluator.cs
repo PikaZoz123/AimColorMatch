@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Evaluator : MonoBehaviour
@@ -8,7 +9,6 @@ public class Evaluator : MonoBehaviour
     public GameplayColorSO SelectBest(IEnumerable<GameplayColorSO> availableBagCards,
         Dictionary<ColorItemID, float> towerState,
         float towerCapacity,
-        List<ColorItemID> towerOrder,
         List<GameplayColorSO> handCards)
     {
         GameplayColorSO bestCard = null;
@@ -25,7 +25,6 @@ public class Evaluator : MonoBehaviour
             var score = Evaluate(
                 card,
                 towerState,
-                towerOrder,
                 towerCapacity
             );
 
@@ -39,13 +38,15 @@ public class Evaluator : MonoBehaviour
         return bestCard;
     }
 
-    float Evaluate(GameplayColorSO card, Dictionary<ColorItemID, float> towerState,
-        List<ColorItemID> towerOrder, float towerCapacity)
+    float Evaluate(GameplayColorSO card, Dictionary<ColorItemID, float> towerState, float towerCapacity)
     {
         var simulatedState = Simulate(card, towerState);
 
-        var beforeOpportunity = EvaluateOpportunity(GetOrderedValues(towerOrder, towerState));
-        var afterOpportunity = EvaluateOpportunity(GetOrderedValues(towerOrder, simulatedState));
+        var beforeValues = towerState.Values.ToList();
+        var simulatedValues = simulatedState.Values.ToList();
+
+        var beforeOpportunity = EvaluateOpportunity(beforeValues);
+        var afterOpportunity = EvaluateOpportunity(simulatedValues);
 
         var opportunityImprovement = afterOpportunity - beforeOpportunity;
 
@@ -55,8 +56,8 @@ public class Evaluator : MonoBehaviour
 
         var pressureChange = afterPressure - beforePressure;
 
-        var beforeFlushes = CountFlushes(GetOrderedValues(towerOrder, towerState));
-        var afterFlushes = CountFlushes(GetOrderedValues(towerOrder, simulatedState));
+        var beforeFlushes = CountFlushes(beforeValues);
+        var afterFlushes = CountFlushes(simulatedValues);
 
         var newFlushes = afterFlushes - beforeFlushes;
 
@@ -75,23 +76,6 @@ public class Evaluator : MonoBehaviour
         return score;
     }
 
-    List<float> GetOrderedValues(List<ColorItemID> towerOrder, Dictionary<ColorItemID, float> towerState)
-    {
-        var list = new List<float>();
-        foreach (var orderedID in towerOrder)
-        {
-            foreach (var (id, value) in towerState)
-            {
-                if (id == orderedID)
-                {
-                    list.Add(value);
-                    break;
-                }
-            }
-        }
-
-        return list;
-    }
 
     Dictionary<ColorItemID, float> Simulate(
         GameplayColorSO card,

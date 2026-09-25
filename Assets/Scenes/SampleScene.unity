@@ -150,11 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorsTableSO: {fileID: 11400000, guid: 69c6d3966852e0f47b27846d83e762cd, type: 2}
   hand: {fileID: 1550025777}
-  totalColorCount: 6
-  mixtureColorsCount: 3
-  gameplayColorsCount: 3
+  minIDCount: 3
   mixtureColorIds: 0000000001000000020000000300000004000000
-  initializeRandomColors: 0
 --- !u!4 &108844213
 Transform:
   m_ObjectHideFlags: 0
@@ -853,6 +850,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c13cdc21a55d92049be89c1c1b8454dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &736148808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736148811}
+  - component: {fileID: 736148810}
+  - component: {fileID: 736148809}
+  m_Layer: 0
+  m_Name: FlushHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &736148809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736148808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7b4972ce174146bb96f3a16f597319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Reconfigurator
+  balanceProfileSo: {fileID: 11400000, guid: 6f4a5e9e5ab34c54b8647d36d5d4e982, type: 2}
+  hand: {fileID: 1550025777}
+--- !u!114 &736148810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736148808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1399a4d1cb0d4a54b2487517d5e0c812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlushHandler
+  mixtureBar: {fileID: 1063384522}
+  reconfigurator: {fileID: 736148809}
+  minAdjacentTowers: 3
+--- !u!4 &736148811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736148808}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &738748685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,6 +1330,21 @@ MonoBehaviour:
   onColorsInitialized:
     m_PersistentCalls:
       m_Calls: []
+  onColorsStateChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 736148810}
+        m_TargetAssemblyTypeName: FlushHandler, Assembly-CSharp
+        m_MethodName: E_MixtureBar_OnColorsStateChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1063384523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1776,3 +1850,4 @@ SceneRoots:
   - {fileID: 2053458165}
   - {fileID: 806709230}
   - {fileID: 1550025778}
+  - {fileID: 736148811}

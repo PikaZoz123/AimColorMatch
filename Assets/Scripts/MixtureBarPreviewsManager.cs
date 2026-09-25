@@ -56,14 +56,14 @@ public class MixtureBarPreviewsManager : PreviewManager
 
         if (showPreview)
         {
-            Debug.Log($"Previewing Affect Color {colorToAffect} - value: {affectValue}");
+            //Debug.Log($"Previewing Affect Color {colorToAffect} - value: {affectValue}");
 
             colorPreview.PreviewConsequence(affectColorConsequence, colorManager);
         }
         else
         {
             colorPreview.HidePreview();
-            Debug.Log($"NOT Previewing Affect Color {colorToAffect} - value: {affectValue}");
+            //Debug.Log($"NOT Previewing Affect Color {colorToAffect} - value: {affectValue}");
         }
 
         mixtureBar.RebuildLayout();
@@ -78,14 +78,14 @@ public class MixtureBarPreviewsManager : PreviewManager
 
         if (showPreview)
         {
-            Debug.Log($"Previewing Nullify Color {changeColorConsequence}");
+            //Debug.Log($"Previewing Nullify Color {changeColorConsequence}");
 
             colorPreview.PreviewConsequence(changeColorConsequence, colorManager);
         }
         else
         {
             colorPreview.HidePreview();
-            Debug.Log($"NOT Previewing Nullify Color {changeColorConsequence.colorItemID}");
+            //Debug.Log($"NOT Previewing Nullify Color {changeColorConsequence.colorItemID}");
         }
 
         mixtureBar.RebuildLayout();

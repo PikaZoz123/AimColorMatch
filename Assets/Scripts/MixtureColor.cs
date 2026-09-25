@@ -21,6 +21,7 @@ public class MixtureColor : MonoBehaviour
     {
         this.mixtureColorSO = mixtureColorSO;
         colorImg.color = mixtureColorSO.colorItemSO.colorValue;
+        name = $"{mixtureColorSO.colorItemSO.colorItemID}";
 
         this.maxCapacity = maxCapacity;
         this.barWidth = barWidth;

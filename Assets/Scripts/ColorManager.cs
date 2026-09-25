@@ -5,15 +5,19 @@ public class ColorManager : MonoBehaviour // divides game colors to mixture and 
 {
     [SerializeField] ColorTableSO colorsTableSO;
     [SerializeField] Hand hand;
-    [SerializeField] int totalColorCount = 6;
-    [SerializeField] int mixtureColorsCount = 3;
-
-    [SerializeField] int gameplayColorsCount = 3;
+    [SerializeField] [Range(3, 10)] int minIDCount = 3;
     [SerializeField] List<ColorItemID> mixtureColorIds;
 
-    [SerializeField] bool initializeRandomColors;
     readonly List<GameplayColorSO> colorsInHand = new();
 
+    void Awake()
+    {
+        if (mixtureColorIds.Count < minIDCount)
+        {
+            Debug.LogError($"Can't have a ID count less than {minIDCount}, Check your mixture colors IDs list");
+            Debug.Break();
+        }
+    }
 
     public List<MixtureColorSO> GetMixtureColorsData()
     {

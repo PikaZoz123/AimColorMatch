@@ -32,7 +32,7 @@ public class AnchorPreviewsManager : PreviewManager
         else
         {
             anchorToPreview.HidePreview();
-            Debug.Log($"NOT Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {anchorToPreview.name}");
+            //Debug.Log($"NOT Previewing Generate Gameplay Color {changeColorExistence.colorItemID} at Random Anchor: {anchorToPreview.name}");
         }
     }
 }

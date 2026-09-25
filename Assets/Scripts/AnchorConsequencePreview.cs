@@ -10,7 +10,7 @@ public class AnchorConsequencePreview : ConsequencePreview
     {
         if (activePreviewObject != null)
         {
-            Debug.Log($"Preview Object: {activePreviewObject.name} destroyed!");
+            //Debug.Log($"Preview Object: {activePreviewObject.name} destroyed!");
             Destroy(activePreviewObject.gameObject);
         }
     }
